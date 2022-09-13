@@ -1,11 +1,11 @@
 import setuptools
 
 setuptools.setup(
-    name="tiktok-scrapper",
+    name="aiotiktok",
     version="0.1",
     author="sheldy",
     description="Tool for parse tiktok data",
-    url="https://github.com/sheldygg/tiktok-scrapper",
+    url="https://github.com/sheldygg/aiotiktok",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3.6",

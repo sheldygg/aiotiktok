@@ -2,5 +2,7 @@ from .tiktok import Tiktok
 
 
 __all__ = (
-    'Tiktok',
+    'Tiktok'
 )
+
+__version__ = '1'
