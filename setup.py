@@ -22,6 +22,7 @@ setuptools.setup(
     url="https://github.com/sheldygg/aiotiktok",
     packages=setuptools.find_packages(),
     long_description=get_description(),
+    long_description_content_type='text/markdown',
     classifiers=[
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
