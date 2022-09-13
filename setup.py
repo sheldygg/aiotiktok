@@ -2,8 +2,14 @@ import setuptools
 
 
 def get_description():
+    """
+    Read full description from 'README.rst'
+    :return: description
+    :rtype: str
+    """
     with open('README.rst', 'r', encoding='utf-8') as f:
         return f.read()
+
     
     
     
