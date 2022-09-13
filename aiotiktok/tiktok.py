@@ -52,39 +52,25 @@ class Tiktok():
             else:
                 video_type = "video"
                 media = data["video"]["play_addr"]["url_list"][0]
-            cover = data['video']['cover']['url_list'][0]
-            dynamic_cover = data['video']['dynamic_cover']['url_list'][0]
-            desc = data["desc"]
-            comment_count = data["statistics"]["comment_count"]
-            play_count = data["statistics"]["play_count"]
-            download_count = data["statistics"]["download_count"]
-            share_count = data["statistics"]["share_count"]
-            create_time = data["create_time"]
-            author_name = data["author"]["nickname"]
-            author_nick = data["author"]["unique_id"]
-            author_pic = data["author"]["avatar_larger"]["url_list"][0]
-            music_title = data['music']['title']
-            music_author = data['music']['author']
-            music_url = data['music']['play_url']['url_list'][0]
-            music_cover = data["music"]["cover_large"]["url_list"][0]
-            video_info = {"status": "succes",
+            
+            video_info = {"status": "success",
                         "video_type": video_type,
                         "media": media,
-                        "cover": cover,
-                        "dynamic_cover": dynamic_cover,
-                        "desc": desc,
-                        "play_count": play_count,
-                        "comment_count": comment_count,
-                        "download_count": download_count,
-                        "share_count": share_count,
-                        "create_time": create_time,
-                        "author_name": author_name,
-                        "author_nick": author_nick,
-                        "author_pic": author_pic,
-                        "music_title": music_title,
-                        "music_author": music_author,
-                        "music_url": music_url,
-                        "music_cover": music_cover
+                        "cover": data['video']['cover']['url_list'][0],
+                        "dynamic_cover": data['video']['dynamic_cover']['url_list'][0],
+                        "desc": data["desc"],
+                        "play_count": data["statistics"]["play_count"],
+                        "comment_count": data["statistics"]["comment_count"],
+                        "download_count": data["statistics"]["download_count"],
+                        "share_count": data["statistics"]["share_count"],
+                        "create_time": data["create_time"],
+                        "author_name": data["author"]["nickname"],
+                        "author_nick": data["author"]["unique_id"],
+                        "author_pic": data["author"]["avatar_larger"]["url_list"][0],
+                        "music_title": data['music']['title'],
+                        "music_author": data['music']['author'],
+                        "music_url": data['music']['play_url']['url_list'][0],
+                        "music_cover": data["music"]["cover_large"]["url_list"][0]
             }
         except Exception as e:
             video_info = {"status": "failed", "except": e}
