@@ -35,6 +35,12 @@ class Tiktok():
         return original_url
 
     async def tiktok(self, original_url: str):
+        """
+        Get TikTok data
+        :param original_url: url to video
+        :return: dict
+        """
+        
         original_url = await self.get_video_id(original_url)
         video_id = re.findall('/video/(\d+)?', original_url)[0]
         

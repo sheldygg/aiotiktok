@@ -2,7 +2,7 @@ import setuptools
 
 setuptools.setup(
     name="aiotiktok",
-    version="1.1",
+    version="1.2",
     author="sheldy",
     description="Tool for parse tiktok data",
     url="https://github.com/sheldygg/aiotiktok",
