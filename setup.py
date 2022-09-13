@@ -7,7 +7,7 @@ def get_description():
     :return: description
     :rtype: str
     """
-    with open('README.rst', 'r', encoding='utf-8') as f:
+    with open('README.md', 'r', encoding='utf-8') as f:
         return f.read()
 
     
