@@ -1,6 +1,7 @@
 # AIOtiktok
 
-[![PyPi Package Version](https://img.shields.io/pypi/v/aiotiktok)](https://pypi.org/project/aiotiktok/)
+[![PyPi Package Version](https://img.shields.io/pypi/v/aiotiktok?color=blue)](https://pypi.org/project/aiotiktok/)
+[![Downloads](https://img.shields.io/pypi/dm/aiotiktok?color=blue)](https://pypi.org/project/aiotiktok/)
 
 **aiotiktok** super simple and fast library to get all video data from tiktok
 
