@@ -16,7 +16,7 @@ class Tiktok():
             "Host": "www.tiktok.com",
             "User-Agent": "Mozilla/5.0  (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) coc_coc_browser/86.0.170 Chrome/80.0.3987.170 Safari/537.36",
         }
-        self.tiktok_api_link = "https://api.tiktokv.com/aweme/v1/aweme/detail/?aweme_id={}"
+        self.tiktok_api_link = "https://api-h2.tiktokv.com/aweme/v1/feed/?version_code=2613&aweme_id={}&device_type=Pixel%204"
 
     async def make_session(self):
         self.session = ClientSession()
@@ -49,7 +49,7 @@ class Tiktok():
         predata = await response.json()
         await self.close_session()
         try:
-            data = predata["aweme_detail"]
+            data = predata["aweme_list"][0]  
             if "image_post_info" in data:
                 video_type = "album"
                 media = []
@@ -72,10 +72,10 @@ class Tiktok():
                         "create_time": data["create_time"],
                         "author_name": data["author"]["nickname"],
                         "author_nick": data["author"]["unique_id"],
-                        "author_pic": data["author"]["avatar_larger"]["url_list"][0],
+                        "author_pic": data["author"]["avatar_medium"]["url_list"][0],
                         "music_title": data['music']['title'],
                         "music_author": data['music']['author'],
-                        "music_url": data['music']['play_url']['url_list'][0],
+                        "music_url": data['music']['play_url']['uri'],
                         "music_cover": data["music"]["cover_large"]["url_list"][0]
             }
         except Exception as e:
