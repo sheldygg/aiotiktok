@@ -5,4 +5,4 @@ __all__ = (
     'Tiktok'
 )
 
-__version__ = '1.5'
+__version__ = '1.5.1'

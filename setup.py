@@ -2,7 +2,7 @@ import setuptools
 
 
 def get_description():
-    with open('README.rst', 'r', encoding='utf-8') as f:
+    with open('README.md', 'r', encoding='utf-8') as f:
         return f.read()
 
     
@@ -10,7 +10,7 @@ def get_description():
     
 setuptools.setup(
     name="aiotiktok",
-    version="1.5",
+    version="1.5.1",
     license='MIT',
     author="sheldy",
     description="Tool for parse tiktok data",
