@@ -34,7 +34,7 @@ class Tiktok():
         
         original_url = await self.get_video_id(original_url)
         if original_url == self.tiktok_url or "video" not in original_url:
-            raise URLUnavailable("URLUnavailable, check the link")
+            raise URLUnavailable("URLUnavailable, check the link") # IF URL NOT HAVE VIDEO ID
         else:
             video_id = re.findall('/video/(\d+)?', original_url)[0]
         
