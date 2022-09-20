@@ -33,7 +33,7 @@ class Tiktok():
         """
         
         original_url = await self.get_video_id(original_url)
-        if original_url == self.tiktok_url:
+        if original_url == self.tiktok_url or "video" not in original_url:
             raise URLUnavailable("URLUnavailable, check the link")
         else:
             video_id = re.findall('/video/(\d+)?', original_url)[0]
@@ -52,26 +52,26 @@ class Tiktok():
             else:
                 video_type = "video"
                 media = data["video"]["play_addr"]["url_list"][0]
-            
-            video_info = {"status": "success",
-                        "video_type": video_type,
-                        "media": media,
-                        "cover": data['video']['cover']['url_list'][0],
-                        "dynamic_cover": data['video']['dynamic_cover']['url_list'][0],
-                        "desc": data["desc"],
-                        "play_count": data["statistics"]["play_count"],
-                        "comment_count": data["statistics"]["comment_count"],
-                        "download_count": data["statistics"]["download_count"],
-                        "share_count": data["statistics"]["share_count"],
-                        "create_time": data["create_time"],
-                        "author_name": data["author"]["nickname"],
-                        "author_nick": data["author"]["unique_id"],
-                        "author_pic": data["author"]["avatar_medium"]["url_list"][0],
-                        "music_title": data['music']['title'],
-                        "music_author": data['music']['author'],
-                        "music_url": data['music']['play_url']['uri'],
-                        "music_cover": data["music"]["cover_large"]["url_list"][0]
-            }
-            return video_info
+            return dict(
+                status="success",
+                video_type=video_type,
+                media=media,
+                cover=data['video']['cover']['url_list'][0],
+                dynamic_cover=data['video']['dynamic_cover']['url_list'][0],
+                desc=data["desc"],
+                play_count=data["statistics"]["comment_count"],
+                comment_count=data["statistics"]["comment_count"],
+                download_count=data["statistics"]["download_count"],
+                share_count=data["statistics"]["share_count"],
+                create_time=data["create_time"],
+                author_name=data["author"]["nickname"],
+                author_nick=data["author"]["unique_id"],
+                author_pic=data["author"]["avatar_medium"]["url_list"][0],
+                music_title=data['music']['title'],
+                music_author=data['music']['author'],
+                music_url=data['music']['play_url']['uri'],
+                music_cover=data["music"]["cover_large"]["url_list"][0]
+                
+            )
         else:
             raise VideoUnavailable("VideoUnavailable")
