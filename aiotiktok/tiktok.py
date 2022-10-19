@@ -1,4 +1,6 @@
 import re
+import random
+import time
 
 from aiohttp import ClientSession
 
@@ -6,11 +8,17 @@ from .exceptions import VideoUnavailable, URLUnavailable
 
 class Tiktok():
     def __init__(self) -> None:
-        self.headers = {
-            'user-agent': 'Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Mobile Safari/537.36 Edg/87.0.664.66'
+        self.tiktok_api_headers = {
+            'user-agent': 'com.ss.android.ugc.trill/2613 (Linux; U; Android 10; en_US; Pixel 4; Build/QQ3A.200805.001; Cronet/58.0.2991.0)'
         }
-        self.tiktok_api_link = "https://api-h2.tiktokv.com/aweme/v1/feed/?version_code=2613&aweme_id={}&device_type=Pixel%204"
         self.tiktok_url = "https://www.tiktok.com/"
+        self.tiktok_api_link = "https://api-h2.tiktokv.com/aweme/v1/feed/?aweme_id={}"+\
+                        "&version_name=26.1.3&version_code=2613&build_number=26.1.3&manifest_version_code=2613"+\
+                        "&update_version_code=2613&openudid={}&uuid={}&_rticket={}&ts={}&device_brand=Google"+\
+                            "&device_type=Pixel%204&device_platform=android&resolution=1080*1920&dpi=420&os_version=10"+\
+                                "&os_api=29&carrier_region=US&sys_region=US%C2%AEion=US&app_name=trill&app_language=en"+\
+                                    "&language=en&timezone_name=America/New_York&timezone_offset=-14400&channel=googleplay"+\
+                                        "&ac=wifi&mcc_mnc=310260&is_my_cn=0&aid=1180&ssmix=a&as=a1qwert123&cp=cbfhckdckkde1"
 
     async def get_video_id(self, original_url: str):
         if "@" in original_url:
@@ -33,9 +41,13 @@ class Tiktok():
             raise URLUnavailable("URLUnavailable, check the link")
         else:
             video_id = re.findall('/video/(\d+)?', original_url)[0]
-        
+        openudid = ''.join(random.sample('0123456789abcdef',16))
+        uuid = ''.join(random.sample('01234567890123456',16))
+        ts = int(time.time())
+        tiktok_api_link = self.tiktok_api_link.format(
+            video_id, openudid, uuid, ts*1000, ts)
         async with ClientSession() as session:
-            async with session.get(self.tiktok_api_link.format(video_id), headers=self.headers) as response:
+            async with session.get(url=tiktok_api_link, headers=self.tiktok_api_headers) as response:
                 predata = await response.json()
         data = predata["aweme_list"][0]
         if data["aweme_id"] == video_id:
