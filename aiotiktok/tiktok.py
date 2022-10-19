@@ -11,18 +11,14 @@ class Tiktok():
         }
         self.tiktok_api_link = "https://api-h2.tiktokv.com/aweme/v1/feed/?version_code=2613&aweme_id={}&device_type=Pixel%204"
         self.tiktok_url = "https://www.tiktok.com/"
-        
-    async def make_session(self):
-        self.session = ClientSession()
 
     async def get_video_id(self, original_url: str):
         if "@" in original_url:
             return original_url
         else:
-            await self.make_session()
-            resp = await self.session.get(url=original_url, allow_redirects=False)
-            original_url = resp.headers["Location"].split("?")[0]
-            await self.session.close()
+            async with ClientSession() as session:
+                async with session.get(url=original_url, allow_redirects=False) as resp:
+                    original_url = resp.headers["Location"].split("?")[0]
         return original_url
 
     async def tiktok(self, original_url: str):
@@ -34,14 +30,13 @@ class Tiktok():
         
         original_url = await self.get_video_id(original_url)
         if original_url == self.tiktok_url or "video" not in original_url:
-            raise URLUnavailable("URLUnavailable, check the link") # IF URL NOT HAVE VIDEO ID
+            raise URLUnavailable("URLUnavailable, check the link")
         else:
             video_id = re.findall('/video/(\d+)?', original_url)[0]
         
-        await self.make_session()
-        response = await self.session.get(self.tiktok_api_link.format(video_id), headers=self.headers)
-        predata = await response.json()
-        await self.session.close()
+        async with ClientSession() as session:
+            async with session.get(self.tiktok_api_link.format(video_id), headers=self.headers) as response:
+                predata = await response.json()
         data = predata["aweme_list"][0]
         if data["aweme_id"] == video_id:
             if "image_post_info" in data:

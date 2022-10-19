@@ -10,7 +10,7 @@ def get_description():
     
 setuptools.setup(
     name="aiotiktok",
-    version="1.6.2",
+    version="1.6.3",
     license='MIT',
     author="sheldy",
     description="Tool for parse tiktok data",
@@ -19,12 +19,8 @@ setuptools.setup(
     long_description=get_description(),
     long_description_content_type='text/markdown',
     classifiers=[
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.10",
-        "Operating System :: OS Independent"
+        "Programming Language :: Python :: 3.10"
     ],
     install_requires=[
         'aiohttp'
