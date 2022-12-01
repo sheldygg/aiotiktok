@@ -41,35 +41,37 @@ class Tiktok:
                 url=tiktok_api_link, headers=self.tiktok_api_headers
             ) as response:
                 predata = await response.json()
-        data = predata["aweme_list"][0]
-        if data["aweme_id"] == video_id:
-            if "image_post_info" in data:
-                video_type = "album"
-                media = []
-                for images in data["image_post_info"]["images"]:
-                    media.append(images["display_image"]["url_list"][0])
+        if predata:
+            data = predata["aweme_list"][0]
+            if data["aweme_id"] == video_id:
+                if "image_post_info" in data:
+                    video_type = "album"
+                    media = []
+                    for images in data["image_post_info"]["images"]:
+                        media.append(images["display_image"]["url_list"][0])
+                else:
+                    video_type = "video"
+                    media = data["video"]["play_addr"]["url_list"][0]
+                return dict(
+                    status="success",
+                    video_type=video_type,
+                    media=media,
+                    cover=data["video"]["cover"]["url_list"][0],
+                    dynamic_cover=data["video"]["dynamic_cover"]["url_list"][0],
+                    desc=data["desc"],
+                    play_count=data["statistics"]["comment_count"],
+                    comment_count=data["statistics"]["comment_count"],
+                    download_count=data["statistics"]["download_count"],
+                    share_count=data["statistics"]["share_count"],
+                    create_time=data["create_time"],
+                    author_name=data["author"]["nickname"],
+                    author_nick=data["author"]["unique_id"],
+                    author_pic=data["author"]["avatar_medium"]["url_list"][0],
+                    music_title=data["music"]["title"],
+                    music_author=data["music"]["author"],
+                    music_url=data["music"]["play_url"]["uri"],
+                    music_cover=data["music"]["cover_large"]["url_list"][0],
+                )
             else:
-                video_type = "video"
-                media = data["video"]["play_addr"]["url_list"][0]
-            return dict(
-                status="success",
-                video_type=video_type,
-                media=media,
-                cover=data["video"]["cover"]["url_list"][0],
-                dynamic_cover=data["video"]["dynamic_cover"]["url_list"][0],
-                desc=data["desc"],
-                play_count=data["statistics"]["comment_count"],
-                comment_count=data["statistics"]["comment_count"],
-                download_count=data["statistics"]["download_count"],
-                share_count=data["statistics"]["share_count"],
-                create_time=data["create_time"],
-                author_name=data["author"]["nickname"],
-                author_nick=data["author"]["unique_id"],
-                author_pic=data["author"]["avatar_medium"]["url_list"][0],
-                music_title=data["music"]["title"],
-                music_author=data["music"]["author"],
-                music_url=data["music"]["play_url"]["uri"],
-                music_cover=data["music"]["cover_large"]["url_list"][0],
-            )
-        else:
-            raise VideoUnavailable("VideoUnavailable")
+                raise VideoUnavailable("VideoUnavailable")
+        return
