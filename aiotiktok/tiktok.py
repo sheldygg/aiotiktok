@@ -34,7 +34,6 @@ class Tiktok:
             raise URLUnavailable("URLUnavailable, check the link")
         else:
             video_id = re.findall("/video/(\d+)?", original_url)[0]
-        print(video_id)
         tiktok_api_link = self.tiktok_api_url.format(video_id)
 
         async with ClientSession() as session:
