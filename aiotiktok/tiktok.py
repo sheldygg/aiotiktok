@@ -11,7 +11,7 @@ class Tiktok:
             "user-agent": "com.ss.android.ugc.trill/2613 (Linux; U; Android 10; en_US; Pixel 4; Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
         }
         self.tiktok_url = "https://www.tiktok.com/"
-        self.tiktok_api_url = "https://api.tiktokv.com/aweme/v1/feed/?aweme_id={}&iid=6165993682518218889&device_id=6858675245898655468&aid=1180"
+        self.tiktok_api_url = "https://api16-normal-useast5.us.tiktokv.com/aweme/v1/feed/?aweme_id={}&iid=6165993682518218889&device_id=6858675245898655468&aid=1180"
 
     async def get_video_id(self, original_url: str):
         if "@" in original_url:
@@ -34,6 +34,7 @@ class Tiktok:
             raise URLUnavailable("URLUnavailable, check the link")
         else:
             video_id = re.findall("/video/(\d+)?", original_url)[0]
+        print(video_id)
         tiktok_api_link = self.tiktok_api_url.format(video_id)
 
         async with ClientSession() as session:
