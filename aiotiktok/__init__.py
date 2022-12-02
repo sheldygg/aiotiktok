@@ -2,4 +2,4 @@ from .tiktok import Tiktok
 
 __all__ = "Tiktok"
 
-__version__ = "2.0"
+__version__ = "2.1"
