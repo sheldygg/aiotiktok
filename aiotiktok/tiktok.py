@@ -1,7 +1,6 @@
 import re
 
 from aiohttp import ClientSession
-
 from .exceptions import URLUnavailable, VideoUnavailable
 
 
@@ -12,7 +11,14 @@ class Tiktok:
         }
         self.tiktok_url = "https://www.tiktok.com/"
         self.tiktok_api_url = "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/?aweme_id={}"
-
+        self.video_type_codes = {
+            0: 'video',
+            51: 'video',
+            55: 'video',
+            58: 'video',
+            61: 'video',
+            150: 'album'
+        }
     async def get_video_id(self, original_url: str):
         if "@" in original_url:
             return original_url
@@ -28,7 +34,6 @@ class Tiktok:
         :param original_url: url to video
         :return: dict
         """
-
         original_url = await self.get_video_id(original_url)
         if original_url == self.tiktok_url or "video" not in original_url:
             raise URLUnavailable("URLUnavailable, check the link")
@@ -40,36 +45,34 @@ class Tiktok:
                 url=tiktok_api_link, headers=self.tiktok_api_headers
             ) as response:
                 data = (await response.json())["aweme_list"][0]
-        if data:
-            if data["aweme_id"] == video_id:
-                if "image_post_info" in data:
-                    video_type = "album"
-                    media = []
-                    for images in data["image_post_info"]["images"]:
-                        media.append(images["display_image"]["url_list"][0])
-                else:
-                    video_type = "video"
-                    media = data["video"]["play_addr"]["url_list"][0]
-                return dict(
-                    status="success",
-                    video_type=video_type,
-                    media=media,
-                    cover=data["video"]["cover"]["url_list"][0],
-                    dynamic_cover=data["video"]["dynamic_cover"]["url_list"][0],
-                    desc=data["desc"],
-                    play_count=data["statistics"]["comment_count"],
-                    comment_count=data["statistics"]["comment_count"],
-                    download_count=data["statistics"]["download_count"],
-                    share_count=data["statistics"]["share_count"],
-                    create_time=data["create_time"],
-                    author_name=data["author"]["nickname"],
-                    author_nick=data["author"]["unique_id"],
-                    author_pic=data["author"]["avatar_medium"]["url_list"][0],
-                    music_title=data["music"]["title"],
-                    music_author=data["music"]["author"],
-                    music_url=data["music"]["play_url"]["uri"],
-                    music_cover=data["music"]["cover_large"]["url_list"][0],
-                )
-            else:
-                raise VideoUnavailable("VideoUnavailable")
-        return
+        if data and data["aweme_id"] == video_id:
+            video_type_code = data['aweme_type']
+            video_type = self.video_type_codes.get(video_type_code, "video")
+            if video_type == "album":
+                media = []
+                for images in data["image_post_info"]["images"]:
+                    media.append(images["display_image"]["url_list"][0])
+            elif video_type == "video":
+                media = data["video"]["play_addr"]["url_list"][0]
+            return dict(
+                status="success",
+                video_type=video_type,
+                media=media,
+                cover=data["video"]["cover"]["url_list"][0],
+                dynamic_cover=data["video"]["dynamic_cover"]["url_list"][0],
+                desc=data["desc"],
+                play_count=data["statistics"]["comment_count"],
+                comment_count=data["statistics"]["comment_count"],
+                download_count=data["statistics"]["download_count"],
+                share_count=data["statistics"]["share_count"],
+                create_time=data["create_time"],
+                author_name=data["author"]["nickname"],
+                author_nick=data["author"]["unique_id"],
+                author_pic=data["author"]["avatar_medium"]["url_list"][0],
+                music_title=data["music"]["title"],
+                music_author=data["music"]["author"],
+                music_url=data["music"]["play_url"]["uri"],
+                music_cover=data["music"]["cover_large"]["url_list"][0],
+            )
+        else:
+            raise VideoUnavailable("VideoUnavailable")
