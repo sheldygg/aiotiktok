@@ -8,7 +8,7 @@ def get_description():
 
 setuptools.setup(
     name="aiotiktok",
-    version="2.4",
+    version="2.5",
     license='MIT',
     author="sheldy",
     description="Tool for parse tiktok data",

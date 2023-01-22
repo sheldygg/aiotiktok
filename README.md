@@ -14,12 +14,12 @@
 
 ```python
 import asyncio
-from aiotiktok import Tiktok
+from aiotiktok import TiktokClient
 
-tiktok = Tiktok()
+tiktok = TiktokClient()
 
 async def main():
-    data = await tiktok.tiktok(original_url="some url")
+    data = await tiktok.get_tiktok_data(original_url="some url")
     print(data)
     
 asyncio.run(main())

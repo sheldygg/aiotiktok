@@ -1,5 +1,5 @@
-from .tiktok import Tiktok
+from .client import TiktokClient
 
 __all__ = "Tiktok"
 
-__version__ = "2.4"
+__version__ = "2.5"
