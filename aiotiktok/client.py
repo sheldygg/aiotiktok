@@ -25,7 +25,7 @@ class TiktokClient:
 
     async def get_video_id(self, original_url: str):
         if "@" in original_url:
-            return original_url
+            pass
         else:
             async with ClientSession() as session:
                 async with session.get(url=original_url, allow_redirects=False) as resp:
@@ -79,6 +79,7 @@ class TiktokClient:
         :return: dict
         """
         video_id = await self.get_video_id(original_url)
+        print(video_id)
         tiktok_api_link = self.tiktok_api_url.format(video_id)
         data = await self.request(tiktok_api_link)
         if data and data["aweme_id"] == video_id:
