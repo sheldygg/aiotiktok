@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "aiotiktok"
+dynamic = ["version"]
+description = "Tool for parse tiktok data"
+readme = "README.md"
+license = "MIT"
+authors = [
+    { name = "sheldy" },
+]
+classifiers = [
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    "aiohttp",
+    "pydantic",
+]
+
+[project.urls]
+Homepage = "https://github.com/sheldygg/aiotiktok"
+
+[tool.hatch.version]
+path = "aiotiktok/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/aiotiktok",
+]
