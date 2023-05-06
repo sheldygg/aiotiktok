@@ -5,10 +5,11 @@ from .types import Video, Album, VideoData
 from .exceptions import URLUnavailable, VideoUnavailable
 
 
-class TiktokClient:
+class Client:
     def __init__(self) -> None:
         self.tiktok_api_headers = {
-            "user-agent": "com.ss.android.ugc.trill/2613 (Linux; U; Android 10; en_US; Pixel 4; Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
+            "user-agent": "com.ss.android.ugc.trill/2613 (Linux; U; Android 10; en_US; Pixel 4; "
+                          "Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
         }
         self.tiktok_url = "https://www.tiktok.com/"
         self.tiktok_api_url = (
@@ -23,12 +24,12 @@ class TiktokClient:
             150: "album",
         }
 
-    async def get_video_id(self, original_url: str):
-        if "@" in original_url:
+    async def get_video_id(self, url: str):
+        if "@" in url:
             pass
         else:
             async with ClientSession() as session:
-                async with session.get(url=original_url, allow_redirects=False) as resp:
+                async with session.get(url=url, allow_redirects=False) as resp:
                     original_url = resp.headers["Location"].split("?")[0]
         if original_url == self.tiktok_url or "video" not in original_url:
             raise URLUnavailable("URLUnavailable, check the link")
@@ -45,11 +46,11 @@ class TiktokClient:
         video_type_code = data["aweme_type"]
         video_type = self.video_type_codes.get(video_type_code, "video")
         if video_type == "album":
-            media = []
+            images_list = []
             for images in data["image_post_info"]["images"]:
-                media.append(images["display_image"]["url_list"][0])
-            media = Album(images_url=media)
-        elif video_type == "video":
+                images_list.append(images["display_image"]["url_list"][0])
+            media = Album(images_url=images_list)
+        else:
             media = Video(video_url=data["video"]["play_addr"]["url_list"][0])
         return VideoData(
             status="success",
@@ -72,14 +73,13 @@ class TiktokClient:
             music_cover=data["music"]["cover_large"]["url_list"][0],
         )
 
-    async def get_tiktok_data(self, original_url: str):
+    async def get_data(self, url: str):
         """
         Get TikTok data
-        :param original_url: url to video
+        :param url: url to video
         :return: dict
         """
-        video_id = await self.get_video_id(original_url)
-        print(video_id)
+        video_id = await self.get_video_id(url)
         tiktok_api_link = self.tiktok_api_url.format(video_id)
         data = await self.request(tiktok_api_link)
         if data and data["aweme_id"] == video_id:

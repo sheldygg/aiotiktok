@@ -3,7 +3,7 @@
 [![PyPi Package Version](https://img.shields.io/pypi/v/aiotiktok?color=blue)](https://pypi.org/project/aiotiktok/)
 [![Downloads](https://img.shields.io/pypi/dm/aiotiktok?color=blue)](https://pypi.org/project/aiotiktok/)
 
-**aiotiktok** super simple and fast library to get all video data from tiktok
+**aiotiktok** super simple and fast library to get all video data from TikTok
 
 
 **One step before start.**
@@ -14,12 +14,12 @@
 
 ```python
 import asyncio
-from aiotiktok import TiktokClient
+from aiotiktok import Client
 
-tiktok = TiktokClient()
+tiktok = Client()
 
 async def main():
-    data = await tiktok.get_tiktok_data(original_url="some url")
+    data = await tiktok.get_data(url="some url")
     print(data)
     
 asyncio.run(main())

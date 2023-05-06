@@ -1,5 +1,3 @@
-from .client import TiktokClient
+from .client import Client
 
-__all__ = "Tiktok"
-
-__version__ = "2.5.1"
+__version__ = "2.5.2"
