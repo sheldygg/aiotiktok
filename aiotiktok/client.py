@@ -30,10 +30,10 @@ class Client:
         else:
             async with ClientSession() as session:
                 async with session.get(url=url, allow_redirects=False) as resp:
-                    original_url = resp.headers["Location"].split("?")[0]
-        if original_url == self.tiktok_url or "video" not in original_url:
+                    url = resp.headers["Location"].split("?")[0]
+        if url == self.tiktok_url or "video" not in url:
             raise URLUnavailable("URLUnavailable, check the link")
-        video_id = re.findall("/video/(\d+)?", original_url)[0]
+        video_id = re.findall("/video/(\d+)?", url)[0]
         return video_id
 
     async def request(self, url: str):
