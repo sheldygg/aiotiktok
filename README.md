@@ -17,10 +17,12 @@ from aiotiktok import Client
 
 tiktok = Client()
 
+
 async def main():
-    data = await tiktok.get_data(url="some url")
+    data = await tiktok.video_data(url="some url")
     print(data)
-    
+
+
 asyncio.run(main())
 ```
 

@@ -20,6 +20,10 @@ dependencies = [
     "msgspec",
 ]
 
+signature = [
+    "tiktok-signature"
+]
+
 [project.urls]
 Homepage = "https://github.com/sheldygg/aiotiktok"
 
