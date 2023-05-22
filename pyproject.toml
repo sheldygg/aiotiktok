@@ -30,3 +30,5 @@ path = "aiotiktok/__init__.py"
 include = [
     "/aiotiktok",
 ]
+[tool.isort]
+profile = "black"

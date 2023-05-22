@@ -4,11 +4,13 @@ from urllib.parse import urlencode, urljoin
 
 from httpx import AsyncClient
 
-from .constants import (default_user_videos_params,
-                        static_unsigned_user_videos, static_user_videos_url)
+from .constants import (
+    default_user_videos_params,
+    static_unsigned_user_videos,
+    static_user_videos_url,
+)
 from .exceptions import URLUnavailable, VideoUnavailable
-from .extractors import (extract_data_from_html, extract_user_data,
-                         extract_video_data)
+from .extractors import extract_data_from_html, extract_user_data, extract_video_data
 from .types import Author, VideoData
 
 
