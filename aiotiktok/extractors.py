@@ -1,7 +1,7 @@
 import json
 import re
 
-from .types import Album, Author, Video, VideoData, VideoType, video_type_codes
+from .types import Album, Author, Music, Video, VideoData, VideoType, video_type_codes
 
 
 def extract_video_data(data: dict) -> VideoData:
@@ -14,12 +14,6 @@ def extract_video_data(data: dict) -> VideoData:
     else:
         media = Video(url=data["video"]["play_addr"]["url_list"][0])
     author_data = data.get("author")
-    author = Author(
-        id=author_data.get("id"),
-        nickname=author_data.get("nickname"),
-        unique_id=author_data.get("unique_id"),
-        avatar=author_data.get("avatar_larger", {}).get("url_list")[0],
-    )
     return VideoData(
         video_type=video_type,
         media=media,
@@ -31,11 +25,18 @@ def extract_video_data(data: dict) -> VideoData:
         download_count=data["statistics"]["download_count"],
         share_count=data["statistics"]["share_count"],
         create_time=data["create_time"],
-        author=author,
-        music_title=data["music"]["title"],
-        music_author=data["music"]["author"],
-        music_url=data["music"]["play_url"]["uri"],
-        music_cover=data["music"]["cover_large"]["url_list"][0],
+        author=Author(
+            id=author_data.get("id"),
+            nickname=author_data.get("nickname"),
+            unique_id=author_data.get("unique_id"),
+            avatar=author_data.get("avatar_larger", {}).get("url_list")[0],
+        ),
+        music=Music(
+            title=data["music"]["title"],
+            author=data["music"]["author"],
+            url=data["music"]["play_url"]["uri"],
+            cover=data["music"]["cover_large"]["url_list"][0],
+        ),
     )
 
 

@@ -35,8 +35,15 @@ class Author(Struct, kw_only=True):
     avatar: str
 
 
+class Music(Struct):
+    title: str
+    author: str
+    url: str
+    cover: str
+
+
 class VideoData(Struct):
-    video_type: str
+    video_type: VideoType
     media: Video | Album
     cover: str
     dynamic_cover: str
@@ -47,10 +54,4 @@ class VideoData(Struct):
     share_count: int
     create_time: datetime
     author: Author
-    # author_name: str
-    # author_nick: str
-    # author_pic: str
-    music_title: str
-    music_author: str
-    music_url: str
-    music_cover: str
+    music: Music
