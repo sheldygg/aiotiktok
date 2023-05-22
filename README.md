@@ -38,7 +38,7 @@ from aiotiktok import Client
 
 tiktok = Client(signature_url="your url")
 ```
-By default is http://127.0.0.1/signature
+By default is http://127.0.0.1:8002/signature
 
 Then you can get user feed
 ```python
