@@ -39,7 +39,7 @@ class Client:
         data: dict | str | None = None,
         headers: dict | None = None,
         allow_redirects: bool = True,
-    ):
+    ) -> dict:
         async with AsyncClient() as session:
             response = await session.request(
                 method=method,
@@ -56,7 +56,7 @@ class Client:
                 response = response.read()
         return dict(response=response, headers=response_headers)
 
-    async def get_video_id(self, url: str):
+    async def get_video_id(self, url: str) -> str:
         if "@" in url:
             pass
         else:
@@ -67,7 +67,7 @@ class Client:
         video_id = re.findall("/video/(\d+)?", url)[0]
         return video_id
 
-    async def get_data(
+    async def video_data(
         self, url: str | None = None, video_id: str | int | None = None
     ) -> VideoData:
         """
@@ -101,27 +101,27 @@ class Client:
         item_module = data.get("ItemModule")
         videos = []
         for video in list(item_module.values())[:count]:
-            videos.append(await self.get_data(video_id=video.get("id")))
+            videos.append(await self.video_data(video_id=video.get("id")))
         return videos
 
     async def user_info(self, username: str) -> Author:
         """
         Get UserInfo
         :param username:
-        :return:
+        :return :class:`aiotiktok.types.Author`:
         """
         url = urljoin(self.base_url, f"@{username}")
         response = await self._request(url, headers=self.headers)
         data = extract_data_from_html(response.get("response").decode())
         return extract_user_data(data)
 
-    async def sign_url(self, url: str):
+    async def sign_url(self, url: str) -> dict:
         request = await self._request(
             url=self.signature_url, method="POST", data={"url": url}
         )
         return request.get("response", {})
 
-    async def _get_user_feed_private(self, username: str, count: int | None = None):
+    async def _get_user_feed_private(self, username: str, count: int | None = None) -> list[dict]:
         sec_uid = (await self.user_info(username)).sec_uid
         params = default_user_videos_params
         params.update({"secUid": sec_uid})
@@ -149,16 +149,16 @@ class Client:
             has_more = api_response.get("hasMore")
         return user_videos
 
-    async def user_feed_sig(self, username: str, count: int | None = None):
+    async def user_feed_sig(self, username: str, count: int | None = None) -> list[VideoData]:
         """
         Get user feed with private signature, for use that method you must up your application
         https://github.com/sheldygg/aiotiktok#signature
         :param username:
         :param count:
-        :return:
+        :return: list[:class:`aiotiktok.types.VideoData`]
         """
         videos = []
         user_videos = (await self._get_user_feed_private(username))[:count]
         for video in user_videos:
-            videos.append(await self.get_data(video_id=video.get("id")))
+            videos.append(await self.video_data(video_id=video.get("id")))
         return videos
