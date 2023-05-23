@@ -25,7 +25,7 @@ Simple Request
 
 
    async def main():
-       await tiktok.video_data(url="some url")
+       await tiktok.get_data(url="some url")
 
 
    asyncio.run(main())
