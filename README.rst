@@ -14,7 +14,7 @@ aiotiktok
 to get all video data from TikTok
 
 Simple Request
-========
+==============
 
 .. code-block:: python
 
@@ -31,7 +31,7 @@ Simple Request
    asyncio.run(main())
 
 Signature
-=======
+=========
 
 **For use method user_feed_sig you must up your application.**
 
