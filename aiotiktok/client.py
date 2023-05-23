@@ -19,7 +19,7 @@ class Client:
         self.signature_url = signature_url
         self.api_headers = {
             "user-agent": "com.ss.android.ugc.trill/2613 (Linux; U; Android 10; en_US; Pixel 4; "
-            "Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
+                          "Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
         }
         self.base_url = "https://www.tiktok.com/"
         self.api_url = (
@@ -57,14 +57,12 @@ class Client:
         return dict(response=response, headers=response_headers)
 
     async def get_video_id(self, url: str) -> str:
-        if "@" in url:
-            pass
-        else:
+        if "@" not in url:
             headers = (await self._request(url, allow_redirects=False)).get("headers")
             url = headers.get("Location").split("?")[0]
         if url == self.base_url or "video" not in url:
             raise URLUnavailable("URLUnavailable, check the link")
-        video_id = re.findall("/video/(\d+)?", url)[0]
+        video_id = re.findall("/video/(\d+)", url)[0]
         return video_id
 
     async def video_data(
@@ -90,7 +88,7 @@ class Client:
 
     async def user_feed(self, username: str, count: int = None) -> list[VideoData]:
         """
-        Get User Feed
+        Get user feed, only 30 videos.
         :param username:
         :param count:
         :return: list[:class:`aiotiktok.types.VideoData`]
