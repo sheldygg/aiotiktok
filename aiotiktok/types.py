@@ -19,39 +19,46 @@ video_type_codes = {
 }
 
 
-class Video(Struct):
+class Video(Struct, array_like=True):
     url: str
 
 
-class Album(Struct):
+class Album(Struct, array_like=True):
     urls: list[str]
 
 
-class Author(Struct, kw_only=True):
-    id: str
+class Author(Struct, array_like=True):
     unique_id: str
     nickname: str
-    sec_uid: str | None = None
     avatar: str
+    id: str | None = None
+    sec_uid: str | None = None
 
 
-class Music(Struct):
+class Music(Struct, array_like=True):
     title: str
     author: str
     url: str
     cover: str
 
 
-class VideoData(Struct):
+class Statistics(Struct, array_like=True):
+    likes: int
+    plays: int
+    comments: int
+    downloads: int
+    shares: int
+    saves: int
+
+
+class VideoData(Struct, array_like=True):
+    url: str
     video_type: VideoType
-    media: Video | Album
+    media: Video | Album | None
     cover: str
     dynamic_cover: str
     description: str
-    play_count: int
-    comment_count: int
-    download_count: int
-    share_count: int
+    statistics: Statistics
     create_time: datetime
     author: Author
     music: Music

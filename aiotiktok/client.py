@@ -19,7 +19,7 @@ class Client:
         self.signature_url = signature_url
         self.api_headers = {
             "user-agent": "com.ss.android.ugc.trill/2613 (Linux; U; Android 10; en_US; Pixel 4; "
-                          "Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
+            "Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
         }
         self.base_url = "https://www.tiktok.com/"
         self.api_url = (
@@ -36,7 +36,7 @@ class Client:
         url: str,
         method: str = "GET",
         params: dict | None = None,
-        data: dict | str | None = None,
+        data: dict | None = None,
         headers: dict | None = None,
         allow_redirects: bool = True,
     ) -> dict:
@@ -51,14 +51,16 @@ class Client:
             )
             response_headers = response.headers
             try:
-                response = response.json()
+                response_data = response.json()
             except json.decoder.JSONDecodeError:
-                response = response.read()
-        return dict(response=response, headers=response_headers)
+                response_data = response.read()
+        return dict(response=response_data, headers=response_headers)
 
     async def get_video_id(self, url: str) -> str:
         if "@" not in url:
-            headers = (await self._request(url, allow_redirects=False)).get("headers")
+            headers = (await self._request(url, allow_redirects=False)).get(
+                "headers", {}
+            )
             url = headers.get("Location").split("?")[0]
         if url == self.base_url or "video" not in url:
             raise URLUnavailable("URLUnavailable, check the link")
@@ -74,7 +76,7 @@ class Client:
         :param url: url to video
         :return: :class:`aiotiktok.types.VideoData`
         """
-        if video_id is None:
+        if video_id is None and url:
             video_id = await self.get_video_id(url)
         api_link = self.api_url.format(video_id)
         data = (
@@ -86,7 +88,9 @@ class Client:
             return extract_video_data(data)
         raise VideoUnavailable("VideoUnavailable")
 
-    async def user_feed(self, username: str, count: int = None) -> list[VideoData]:
+    async def user_feed(
+        self, username: str, count: int | None = None
+    ) -> list[VideoData]:
         """
         Get user feed, only 30 videos.
         :param username:
@@ -95,7 +99,7 @@ class Client:
         """
         url = urljoin(self.base_url, f"@{username}")
         response = await self._request(url, headers=self.headers)
-        data = extract_data_from_html(response.get("response").decode())
+        data = extract_data_from_html(response.get("response", b"").decode())
         item_module = data.get("ItemModule")
         videos = []
         for video in list(item_module.values())[:count]:
@@ -110,7 +114,7 @@ class Client:
         """
         url = urljoin(self.base_url, f"@{username}")
         response = await self._request(url, headers=self.headers)
-        data = extract_data_from_html(response.get("response").decode())
+        data = extract_data_from_html(response.get("response", b"").decode())
         return extract_user_data(data)
 
     async def sign_url(self, url: str) -> dict:
@@ -119,7 +123,9 @@ class Client:
         )
         return request.get("response", {})
 
-    async def _get_user_feed_private(self, username: str, count: int | None = None) -> list[dict]:
+    async def _get_user_feed_private(
+        self, username: str, count: int | None = None
+    ) -> list[dict]:
         sec_uid = (await self.user_info(username)).sec_uid
         params = default_user_videos_params
         params.update({"secUid": sec_uid})
@@ -131,7 +137,7 @@ class Client:
         }
         api_response = (
             await self._request(url=static_user_videos_url, headers=headers)
-        ).get("response")
+        ).get("response", {})
         user_videos = [video for video in api_response.get("itemList", [])]
         has_more = api_response.get("hasMore")
         while has_more and len(user_videos) < count if count else None:
@@ -147,7 +153,9 @@ class Client:
             has_more = api_response.get("hasMore")
         return user_videos
 
-    async def user_feed_sig(self, username: str, count: int | None = None) -> list[VideoData]:
+    async def user_feed_sig(
+        self, username: str, count: int | None = None
+    ) -> list[VideoData]:
         """
         Get user feed with private signature, for use that method you must up your application
         https://github.com/sheldygg/aiotiktok#signature

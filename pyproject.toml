@@ -37,3 +37,6 @@ include = [
 ]
 [tool.isort]
 profile = "black"
+
+[tool.ruff]
+line-length = 99
