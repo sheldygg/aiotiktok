@@ -2,16 +2,8 @@ default_user_videos_params = {
     "aid": "1988",
     "count": 30,
     "cursor": 0,
-    "cookie_enabled": True,
-    "screen_width": 0,
-    "screen_height": 0,
-    "browser_language": "",
-    "browser_platform": "",
-    "browser_name": "",
-    "browser_version": "",
-    "browser_online": "",
-    "timezone_name": "Europe/London",
 }
+
 static_user_videos_url = (
     "https://www.tiktok.com/api/post/item_list/?aid=1988&app_language=en&app_name=tiktok_web"
     "&battery_info=1&browser_language=en-US&browser_name=Mozilla&browser_online=true&"
