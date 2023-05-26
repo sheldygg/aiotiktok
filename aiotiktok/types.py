@@ -36,6 +36,7 @@ class Author(Struct, array_like=True):
 
 
 class Music(Struct, array_like=True):
+    id: str
     title: str
     author: str
     url: str
@@ -54,7 +55,7 @@ class Statistics(Struct, array_like=True):
 class VideoData(Struct, array_like=True):
     url: str
     video_type: VideoType
-    media: Video | Album | None
+    media: Album | Video | None
     cover: str
     dynamic_cover: str
     description: str
