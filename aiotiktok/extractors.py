@@ -19,18 +19,20 @@ def create_url_to_video(username: str, video_id: str):
 
 def extract_video_data(data: dict) -> VideoData:
     video_type = video_type_codes.get(data["aweme_type"], VideoType.VIDEO)
-    if video_type == VideoType.ALBUM:
-        media = Album(
+    if video_type == VideoType.VIDEO:
+        media = Video(url=data["video"]["play_addr"]["url_list"][0])
+    elif video_type == VideoType.ALBUM:
+        media = Album(  # type: ignore
             urls=[
                 images["display_image"]["url_list"][0]
                 for images in data["image_post_info"]["images"]
             ]
         )
-    elif video_type == VideoType.VIDEO:
-        media = Video(url=data["video"]["play_addr"]["url_list"][0])
     else:
         media = None
     author_data = data.get("author", {})
+    statistics = data.get("statistics", {})
+    music_data = data.get("music", {})
     author = Author(
         id=author_data.get("id"),
         nickname=author_data.get("nickname"),
@@ -38,7 +40,6 @@ def extract_video_data(data: dict) -> VideoData:
         avatar=author_data.get("avatar_larger", {}).get("url_list")[0],
         sec_uid=author_data.get("sec_uid"),
     )
-    statistics = data.get("statistics", {})
     return VideoData(
         url=create_url_to_video(author.unique_id, data.get("aweme_id", "")),
         video_type=video_type,
@@ -57,10 +58,11 @@ def extract_video_data(data: dict) -> VideoData:
         create_time=data["create_time"],
         author=author,
         music=Music(
-            title=data["music"]["title"],
-            author=data["music"]["author"],
-            url=data["music"]["play_url"]["uri"],
-            cover=data["music"]["cover_large"]["url_list"][0],
+            id=music_data.get("id_str"),
+            title=music_data.get("title"),
+            author=music_data.get("author"),
+            url=music_data.get("play_url", {}).get("uri"),
+            cover=music_data.get("cover_large", {}).get("url_list", [])[0],
         ),
     )
 
