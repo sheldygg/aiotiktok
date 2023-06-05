@@ -62,7 +62,7 @@ def extract_video_data(data: dict) -> VideoData:
             title=music_data.get("title"),
             author=music_data.get("author"),
             url=music_data.get("play_url", {}).get("uri"),
-            cover=music_data.get("cover_large", {}).get("url_list", [])[0],
+            cover=music_data.get("cover_large", {}).get("url_list", [None])[0],
         ),
     )
 
