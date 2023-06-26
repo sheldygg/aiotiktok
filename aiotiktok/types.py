@@ -22,9 +22,15 @@ video_type_codes = {
 class Video(Struct, array_like=True):
     url: str
 
+    def dict(self):
+        return {f: getattr(self, f) for f in self.__struct_fields__}
+
 
 class Album(Struct, array_like=True):
     urls: list[str]
+
+    def dict(self):
+        return {f: getattr(self, f) for f in self.__struct_fields__}
 
 
 class Author(Struct, array_like=True):
@@ -34,6 +40,9 @@ class Author(Struct, array_like=True):
     id: str | None = None
     sec_uid: str | None = None
 
+    def dict(self):
+        return {f: getattr(self, f) for f in self.__struct_fields__}
+
 
 class Music(Struct, array_like=True):
     id: str
@@ -41,6 +50,9 @@ class Music(Struct, array_like=True):
     author: str
     url: str
     cover: str
+
+    def dict(self):
+        return {f: getattr(self, f) for f in self.__struct_fields__}
 
 
 class Statistics(Struct, array_like=True):
@@ -50,6 +62,9 @@ class Statistics(Struct, array_like=True):
     downloads: int
     shares: int
     saves: int
+
+    def dict(self):
+        return {f: getattr(self, f) for f in self.__struct_fields__}
 
 
 class VideoData(Struct, array_like=True):
@@ -63,3 +78,13 @@ class VideoData(Struct, array_like=True):
     create_time: datetime
     author: Author
     music: Music
+
+    def dict(self):
+        result_dict = {}
+        for field in self.__struct_fields__:
+            attr = getattr(self, field)
+            if hasattr(attr, "__struct_fields__"):
+                result_dict.update({field: attr.dict()})
+            else:
+                result_dict.update({field: attr})
+        return result_dict
