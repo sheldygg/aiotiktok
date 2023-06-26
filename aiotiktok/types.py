@@ -24,7 +24,7 @@ class Video(Struct, array_like=True):
     url: str
 
     def dict(self):
-        return {f: getattr(self, f) for f in self.__struct_fields__}
+        return asdict(self)
 
 
 class Album(Struct, array_like=True):
