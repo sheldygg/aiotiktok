@@ -2,6 +2,7 @@ from datetime import datetime
 from enum import Enum
 
 from msgspec import Struct
+from msgspec.structs import asdict
 
 
 class VideoType(str, Enum):
@@ -30,7 +31,7 @@ class Album(Struct, array_like=True):
     urls: list[str]
 
     def dict(self):
-        return {f: getattr(self, f) for f in self.__struct_fields__}
+        return asdict(self)
 
 
 class Author(Struct, array_like=True):
@@ -41,7 +42,7 @@ class Author(Struct, array_like=True):
     sec_uid: str | None = None
 
     def dict(self):
-        return {f: getattr(self, f) for f in self.__struct_fields__}
+        return asdict(self)
 
 
 class Music(Struct, array_like=True):
@@ -52,7 +53,7 @@ class Music(Struct, array_like=True):
     cover: str
 
     def dict(self):
-        return {f: getattr(self, f) for f in self.__struct_fields__}
+        return asdict(self)
 
 
 class Statistics(Struct, array_like=True):
@@ -64,7 +65,7 @@ class Statistics(Struct, array_like=True):
     saves: int
 
     def dict(self):
-        return {f: getattr(self, f) for f in self.__struct_fields__}
+        return asdict(self)
 
 
 class VideoData(Struct, array_like=True):
