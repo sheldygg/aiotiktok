@@ -23,7 +23,7 @@ class Client:
         }
         self.base_url = "https://www.tiktok.com/"
         self.api_url = (
-            "https://api16-normal-c-useast1a.tiktokv.com/aweme/v1/feed/?aweme_id={}"
+            "https://api22-normal-c-useast2a.tiktokv.com/aweme/v1/feed/?aweme_id={}"
         )
         self.headers = {
             "Accept-Encoding": "gzip, deflate",
