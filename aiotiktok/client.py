@@ -19,7 +19,7 @@ class Client:
         self.signature_url = signature_url
         self.api_headers = {
             "user-agent": "com.ss.android.ugc.trill/2613 (Linux; U; Android 10; en_US; Pixel 4; "
-            "Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
+                          "Build/QQ3A.200805.001; Cronet/58.0.2991.0)"
         }
         self.base_url = "https://www.tiktok.com/"
         self.api_url = (
@@ -62,10 +62,12 @@ class Client:
                 "headers", {}
             )
             url = headers.get("Location").split("?")[0]
-        if url == self.base_url or "video" not in url:
+        if url == self.base_url or "video" not in url and "photo" not in url:
             raise URLUnavailable("URLUnavailable, check the link")
-        video_id = re.findall("/video/(\d+)", url)[0]
-        return video_id
+        video_id_match = re.findall("/(?:photo|video)/(\d+)", url)
+        if not video_id_match:
+            raise URLUnavailable("URLUnavailable, check the link")
+        return video_id_match[0]
 
     async def video_data(
         self, url: str | None = None, video_id: str | int | None = None
