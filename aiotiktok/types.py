@@ -1,91 +1,119 @@
-from datetime import datetime
-from enum import Enum
-
-from msgspec import Struct
-from msgspec.structs import asdict
+from dataclasses import dataclass, field
+from enum import StrEnum
 
 
-class VideoType(str, Enum):
+class BaseType:
+    def to_dict(self) -> dict:
+        return {
+            k: v.__dict__ if isinstance(v, BaseType) else v for k, v in self.__dict__.items()
+        }
+
+
+class AwemeType(StrEnum):
     VIDEO = "video"
     ALBUM = "album"
 
 
-video_type_codes = {
-    0: VideoType.VIDEO,
-    51: VideoType.VIDEO,
-    55: VideoType.VIDEO,
-    58: VideoType.VIDEO,
-    61: VideoType.VIDEO,
-    150: VideoType.ALBUM,
+aweme_type_codes = {
+    0: AwemeType.VIDEO,
+    51: AwemeType.VIDEO,
+    55: AwemeType.VIDEO,
+    58: AwemeType.VIDEO,
+    61: AwemeType.VIDEO,
+    150: AwemeType.ALBUM,
 }
 
 
-class Video(Struct, array_like=True):
-    url: str
+@dataclass
+class Statistics:
+    comment_count: int
+    digg_count: int
+    download_count: int
+    play_count: int
+    share_count: int
+    forward_count: int
+    lose_count: int
+    lose_comment_count: int
+    whatsapp_share_count: int
+    collect_count: int
+    repost_count: int
 
-    def dict(self):
-        return asdict(self)
 
-
-class Album(Struct, array_like=True):
-    urls: list[str]
-
-    def dict(self):
-        return asdict(self)
-
-
-class Author(Struct, array_like=True):
-    unique_id: str
+@dataclass
+class Author:
+    uid: str
     nickname: str
-    avatar: str
-    id: str | None = None
-    sec_uid: str | None = None
-
-    def dict(self):
-        return asdict(self)
+    unique_id: str
+    sec_uid: str
 
 
-class Music(Struct, array_like=True):
+@dataclass
+class Video:
+    url: str
+    weight: int
+    height: int
+
+
+@dataclass
+class Image:
+    url: str
+    height: int
+    width: int
+
+
+@dataclass
+class Aweme:
     id: str
-    title: str
-    author: str
-    url: str
-    cover: str
-
-    def dict(self):
-        return asdict(self)
-
-
-class Statistics(Struct, array_like=True):
-    likes: int
-    plays: int
-    comments: int
-    downloads: int
-    shares: int
-    saves: int
-
-    def dict(self):
-        return asdict(self)
-
-
-class VideoData(Struct, array_like=True):
-    url: str
-    video_type: VideoType
-    media: Album | Video | None
-    cover: str
-    dynamic_cover: str
-    description: str
-    statistics: Statistics
-    create_time: datetime
+    type: AwemeType
+    create_time: int
     author: Author
-    music: Music
+    statistics: Statistics
+    video: Video
+    images: list[Image] = field(default_factory=list)
 
-    def dict(self):
-        result_dict = {}
-        for field in self.__struct_fields__:
-            attr = getattr(self, field)
-            if hasattr(attr, "__struct_fields__"):
-                result_dict.update({field: attr.dict()})
-            else:
-                result_dict.update({field: attr})
-        return result_dict
+    @classmethod
+    def from_dict(cls, data: dict) -> "Aweme":
+        if image_post_info := data.get("image_post_info"):
+            images = [
+                Image(
+                    url=image["display_image"]["url_list"][0],
+                    height=image["display_image"]["height"],
+                    width=image["display_image"]["width"],
+                )
+                for image in image_post_info["images"]
+            ]
+        else:
+            images = []
+
+        aweme_type = aweme_type_codes.get(data["aweme_type"], AwemeType.VIDEO)
+
+        return cls(
+            id=data["aweme_id"],
+            type=aweme_type,
+            create_time=data["create_time"],
+            author=Author(
+                uid=data["author"]["uid"],
+                nickname=data["author"]["nickname"],
+                unique_id=data["author"]["unique_id"],
+                sec_uid=data["author"]["sec_uid"],
+            ),
+            statistics=Statistics(
+                comment_count=data["statistics"]["comment_count"],
+                digg_count=data["statistics"]["digg_count"],
+                download_count=data["statistics"]["download_count"],
+                play_count=data["statistics"]["play_count"],
+                share_count=data["statistics"]["share_count"],
+                forward_count=data["statistics"]["forward_count"],
+                lose_count=data["statistics"]["lose_count"],
+                lose_comment_count=data["statistics"]["lose_comment_count"],
+                whatsapp_share_count=data["statistics"]["whatsapp_share_count"],
+                collect_count=data["statistics"]["collect_count"],
+                repost_count=data["statistics"]["repost_count"],
+            ),
+            video=Video(
+                url=data["video"]["play_addr"]["url_list"][0],
+                weight=data["video"]["width"],
+                height=data["video"]["height"],
+            ),
+            images=images,
+        )
