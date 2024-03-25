@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "aiotiktok"
 dynamic = ["version"]
 description = "Tool for parse tiktok data"
-readme = "README.rst"
+readme = "README.md"
 license = "MIT"
 authors = [
     { name = "sheldy" },
@@ -16,20 +16,15 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 dependencies = [
-    "httpx",
-    "msgspec",
+    "aiohttp",
 ]
 
-[project.optional-dependencies]
-signature = [
-    "tiktok-signature"
-]
 
 [project.urls]
 Homepage = "https://github.com/sheldygg/aiotiktok"
 
 [tool.hatch.version]
-path = "aiotiktok/__init__.py"
+path = "aiotiktok/__version__.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
