@@ -24,7 +24,7 @@ dependencies = [
 Homepage = "https://github.com/sheldygg/aiotiktok"
 
 [tool.hatch.version]
-path = "aiotiktok/__version__.py"
+path = "aiotiktok/__meta__.py"
 
 [tool.hatch.build.targets.sdist]
 include = [
