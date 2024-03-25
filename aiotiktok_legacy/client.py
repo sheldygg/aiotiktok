@@ -23,7 +23,7 @@ class Client:
         }
         self.base_url = "https://www.tiktok.com/"
         self.api_url = (
-            "https://api22-normal-c-useast2a.tiktokv.com/aweme/v1/feed/?aweme_id={}"
+            "https://api22-normal-c-alisg.tiktokv.com/aweme/v1/feed/"
         )
         self.headers = {
             "Accept-Encoding": "gzip, deflate",
@@ -81,8 +81,63 @@ class Client:
         if video_id is None and url:
             video_id = await self.get_video_id(url)
         api_link = self.api_url.format(video_id)
+
+        params = {
+            # "passport-sdk-version": "19",
+            "iid": "7318518857994389254",
+            "device_id": "7318517321748022790",
+
+            # "ac": "wifi",
+            "channel": "googleplay",
+            # "aid": "1233",
+
+            "app_name": "musical_ly",
+            "version_code": "300904",
+            # "version_name": "30.9.4",
+            "device_platform": "android",
+            # "os": "android",
+            # "ab_version": "30.9.4",
+            # "ssmix": "a",
+            "device_type": "ASUS_Z01QD",
+            # "device_brand": "Asus",
+
+            # "language": "en",
+            # "os_api": "28",
+            "os_version": "9",
+
+            # "openudid": "704713c0da01388a",
+            # "manifest_version_code": "2023009040",
+            # "resolution": "1600*900",
+            # "dpi": "300",
+            # "update_version_code": "2023009040",
+            # "_rticket": "1692845349183",
+            # "is_pad": "0",
+            # "current_region": "BE",
+            # "app_type": "normal",
+            # "sys_region": "US",
+            # "mcc_mnc": "20610",
+            # "timezone_name": "Asia/Shanghai",
+            # "residence": "BE",
+            # "app_language": "en",
+            # "carrier_region": "BE",
+            # "ac2": "wifi",
+            # "uoo": "0",
+            # "op_region": "BE",
+            # "timezone_offset": "28800",
+            # "build_number": "30.9.4",
+            # "host_abi": "arm64-v8a",
+            # "locale": "en",
+            # "region": "US",
+            # "ts": "1692845349",
+            # "cdid": "60c2140f-c112-491a-8c93-183fd1ea8acf",
+            # "support_webview": "1",
+            # "okhttp_version": "4.1.120.34-tiktok",
+            # "use_store_region_cookie": "1",
+            "aweme_id": video_id
+        }
+
         data = (
-            (await self._request(api_link, headers=self.api_headers))
+            (await self._request(self.api_url, params=params, headers={"x-lagon": '1'}))
             .get("response", {})
             .get("aweme_list", {})[0]
         )
