@@ -4,9 +4,7 @@ from enum import StrEnum
 
 class BaseType:
     def to_dict(self) -> dict:
-        return {
-            k: v.__dict__ if isinstance(v, BaseType) else v for k, v in self.__dict__.items()
-        }
+        return {k: v.__dict__ if isinstance(v, BaseType) else v for k, v in self.__dict__.items()}
 
 
 class AwemeType(StrEnum):
@@ -62,6 +60,7 @@ class Image:
 
 
 @dataclass
+@dataclass
 class Aweme:
     id: str
     type: AwemeType
@@ -70,9 +69,10 @@ class Aweme:
     statistics: Statistics
     video: Video
     images: list[Image] = field(default_factory=list)
+    status: int = 0
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Aweme":
+    def from_dict(cls, data: dict, status: int = 0) -> "Aweme":
         if image_post_info := data.get("image_post_info"):
             images = [
                 Image(
@@ -88,6 +88,7 @@ class Aweme:
         aweme_type = aweme_type_codes.get(data["aweme_type"], AwemeType.VIDEO)
 
         return cls(
+            status=status,
             id=data["aweme_id"],
             type=aweme_type,
             create_time=data["create_time"],
