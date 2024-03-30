@@ -1,3 +1,5 @@
+import json
+
 from dataclasses import dataclass, field
 from enum import StrEnum
 
@@ -69,6 +71,7 @@ class Aweme:
     author: Author
     statistics: Statistics
     video: Video
+    description: str
     images: list[Image] = field(default_factory=list)
 
     @classmethod
@@ -91,6 +94,7 @@ class Aweme:
             id=data["aweme_id"],
             type=aweme_type,
             create_time=data["create_time"],
+            description=data["desc"],
             author=Author(
                 uid=data["author"]["uid"],
                 nickname=data["author"]["nickname"],
