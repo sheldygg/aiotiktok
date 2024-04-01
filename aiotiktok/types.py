@@ -1,5 +1,3 @@
-import json
-
 from dataclasses import dataclass, field
 from enum import StrEnum
 
@@ -24,6 +22,16 @@ aweme_type_codes = {
     61: AwemeType.VIDEO,
     150: AwemeType.ALBUM,
 }
+
+
+@dataclass
+class Music:
+    id: int
+    title: str
+    author: str
+    cover: str
+    duration: int
+    url: str
 
 
 @dataclass
@@ -71,6 +79,7 @@ class Aweme:
     author: Author
     statistics: Statistics
     video: Video
+    music: Music
     description: str
     images: list[Image] = field(default_factory=list)
 
@@ -120,4 +129,12 @@ class Aweme:
                 height=data["video"]["height"],
             ),
             images=images,
+            music=Music(
+                id=data["music"]["id"],
+                title=data["music"]["title"],
+                author=data["music"]["author"],
+                cover=data["music"]["cover_large"]["url_list"][0],
+                duration=data["music"]["duration"],
+                url=data["music"]["play_url"]["url_list"][0],
+            )
         )
