@@ -1,11 +1,13 @@
 from dataclasses import dataclass, field
 from enum import StrEnum
+from typing import Any
 
 
 class BaseType:
-    def to_dict(self) -> dict:
+    def to_dict(self) -> dict[str, Any]:
         return {
-            k: v.__dict__ if isinstance(v, BaseType) else v for k, v in self.__dict__.items()
+            k: v.__dict__ if isinstance(v, BaseType) else v
+            for k, v in self.__dict__.items()
         }
 
 
@@ -84,7 +86,7 @@ class Aweme:
     images: list[Image] = field(default_factory=list)
 
     @classmethod
-    def from_dict(cls, data: dict) -> "Aweme":
+    def from_dict(cls, data: dict[str, Any]) -> "Aweme":
         if image_post_info := data.get("image_post_info"):
             images = [
                 Image(
@@ -136,5 +138,5 @@ class Aweme:
                 cover=data["music"]["cover_large"]["url_list"][0],
                 duration=data["music"]["duration"],
                 url=data["music"]["play_url"]["url_list"][0],
-            )
+            ),
         )
