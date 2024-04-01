@@ -1,4 +1,6 @@
 import re
+import json
+from typing import Callable
 
 from aiohttp import ClientSession
 
@@ -10,8 +12,9 @@ from .exceptions import UrlUnavailable
 
 
 class TikTokClient:
-    def __init__(self, host: str | None = None):
+    def __init__(self, host: str | None = None, json_loads: Callable[..., dict] = json.loads):
         self.host = "https://api22-normal-c-alisg.tiktokv.com/" if host is None else host
+        self.json_loads = json_loads
 
         self._session = ClientSession()
 
@@ -24,7 +27,7 @@ class TikTokClient:
             urljoin(self.host, endpoint),
             **kwargs
         ) as response:
-            return await response.json()
+            return await response.json(loads=self.json_loads)
 
     async def get_video_id(self, video_url: str) -> str:
         async with self._session.get(video_url) as response:
