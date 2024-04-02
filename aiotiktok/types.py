@@ -5,10 +5,23 @@ from typing import Any
 
 class BaseType:
     def to_dict(self) -> dict[str, Any]:
-        return {
-            k: v.__dict__ if isinstance(v, BaseType) else v
-            for k, v in self.__dict__.items()
-        }
+        data = {}
+        for k, v in self.__dict__.items():
+            if isinstance(v, BaseType):
+                data[k] = v.to_dict()
+
+            elif isinstance(v, list):
+                list_data = []
+                for item in v:
+                    if isinstance(item, BaseType):
+                        list_data.append(item.to_dict())
+                    else:
+                        list_data.append(item)
+                data[k] = list_data
+
+            else:
+                data[k] = v
+        return data
 
 
 class AwemeType(StrEnum):
@@ -27,7 +40,7 @@ aweme_type_codes = {
 
 
 @dataclass
-class Music:
+class Music(BaseType):
     id: int
     title: str
     author: str
@@ -37,7 +50,7 @@ class Music:
 
 
 @dataclass
-class Statistics:
+class Statistics(BaseType):
     comment_count: int
     digg_count: int
     download_count: int
@@ -52,7 +65,7 @@ class Statistics:
 
 
 @dataclass
-class Author:
+class Author(BaseType):
     uid: str
     nickname: str
     unique_id: str
@@ -60,21 +73,21 @@ class Author:
 
 
 @dataclass
-class Video:
+class Video(BaseType):
     url: str
     weight: int
     height: int
 
 
 @dataclass
-class Image:
+class Image(BaseType):
     url: str
     height: int
     width: int
 
 
 @dataclass
-class Aweme:
+class Aweme(BaseType):
     id: str
     type: AwemeType
     create_time: int
