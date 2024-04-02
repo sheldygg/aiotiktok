@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 
 from aiohttp import ClientSession
 
-from .exceptions import UrlUnavailable
+from .exceptions import UrlUnavailable, VideoUnavailable
 from .types import Aweme
 
 
@@ -70,6 +70,9 @@ class TikTokClient:
             "aweme_id": video_id,
         }
         data = await self._make_request(HTTPMethod.GET, "aweme/v1/feed/", params=params)
-        aweme_raw_data = data["aweme_list"][0]
 
-        return Aweme.from_dict(aweme_raw_data)
+        for aweme in data["aweme_list"]:
+            if aweme["aweme_id"] == video_id:
+                return Aweme.from_dict(aweme)
+
+        raise VideoUnavailable(video_id)
