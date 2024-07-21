@@ -69,7 +69,7 @@ class TikTokClient:
             "os_version": "9",
             "aweme_id": video_id,
         }
-        data = await self._make_request(HTTPMethod.GET, "aweme/v1/feed/", params=params)
+        data = await self._make_request(HTTPMethod.OPTIONS, "aweme/v1/feed/", params=params)
 
         for aweme in data["aweme_list"]:
             if aweme["aweme_id"] == video_id:
